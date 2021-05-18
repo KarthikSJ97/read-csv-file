@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -16,13 +18,22 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CsvUtils csvUtils;
+
     @PostMapping(value = "/upload", consumes = "text/csv")
     public void uploadSimple(@RequestBody InputStream body) throws IOException {
-        userRepository.saveAll(CsvUtils.read(User.class, body));
+        userRepository.saveAll(csvUtils.read(User.class, body));
     }
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public void uploadMultipart(@RequestParam("file") MultipartFile file) throws IOException {
-        userRepository.saveAll(CsvUtils.read(User.class, file.getInputStream()));
+        csvUtils.read(User.class, file.getInputStream());
+    }
+
+    @PostMapping(value = "/process-csv", consumes = "multipart/form-data")
+    public Collection<User> processCSVFile(@RequestParam(value = "file", required = true) MultipartFile file)
+            throws Exception {
+        return csvUtils.processCSV(file);
     }
 }

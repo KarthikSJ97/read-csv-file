@@ -1,13 +1,14 @@
 package com.example.csvfileprocessing;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Entity
 @Table(name = "user")
@@ -17,14 +18,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "mobileNumber cannot be blank")
     private String mobileNumber;
+
+    @NotBlank(message = "message cannot be blank")
     private String message;
 
     @Enumerated(EnumType.STRING)
     private Channel channel;
 
+    @NotBlank(message = "firstName cannot be blank")
     private String firstName;
+
+    @NotBlank(message = "points cannot be blank")
     private String points;
+
+    @NotBlank(message = "reason cannot be blank")
     private String reason;
 
     public enum Channel{
